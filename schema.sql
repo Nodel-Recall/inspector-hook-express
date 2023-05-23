@@ -6,9 +6,10 @@ CREATE TABLE IF NOT EXISTS bin (
 
 CREATE TABLE IF NOT EXISTS payload (
   PRIMARY KEY (id),
-  id           serial,
-  http_request json,
-  bin_id       integer NOT NULL,
+  id             serial,
+  http_request   json,
+  http_timestamp timestamp NOT NULL,
+  bin_id         integer NOT NULL,
   FOREIGN KEY (bin_id)
   REFERENCES bin (id)
   ON DELETE CASCADE
