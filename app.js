@@ -32,7 +32,7 @@ app.use(requestLogger);
 app.use(express.static("build"));
 
 // ROUTES
-app.use("/", binRoutes);
+app.use("/api/", binRoutes);
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
