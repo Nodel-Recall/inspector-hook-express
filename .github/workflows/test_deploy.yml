@@ -1,0 +1,23 @@
+name: Test Deploy
+
+on:
+  workflow_run:
+    types:
+      - requested
+
+jobs:
+  test_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Stop app
+        run: pm2 stop inspector-hook-express
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start app
+        run: pm2 start npm --name "inspector-hook-express" -- start`
