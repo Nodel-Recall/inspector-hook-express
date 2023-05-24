@@ -3,11 +3,19 @@ const jsonStringifySafe = require("json-stringify-safe");
 // above package is needed to stringify the http request due to request containing circular references and throwing an error
 const pool = require("../pool");
 const URL = process.env.ENDPOINT;
+const { v4: uuidv4 } = require("uuid");
 
-binRoutes.get("/", async (req, res) => {
+binRoutes.get("/new", async (req, res) => {
+  const uuid = uuidv4();
+  const sql = "INSERT INTO bin (endpoint) VALUES ($1)";
+  await pool.query(sql, uuid);
+  res.send(uuid);
+});
+
+binRoutes.get("/:uuid", async (req, res) => {
   //get the id from the bin table of our current endpoint (whose url is in the .env file)
   const sql = "SELECT id FROM bin WHERE endpoint=$1";
-  const result = await pool.query(sql, [URL]);
+  const result = await pool.query(sql, [uuid]);
   const id = result.rows[0].id;
   // get the payload data from the  payload table with the current url
   const sql2 = "SELECT http_request FROM payload WHERE bin_id=$1";
@@ -16,18 +24,13 @@ binRoutes.get("/", async (req, res) => {
   res.send(payloadRequests.rows);
 });
 
-binRoutes.get("/$uuid", (req, res) => {
-  // possible route if there will be multiple url's the app can have webhooks send to
-  // get info from db and send in response
-});
-
-binRoutes.post("/", async (req, res) => {
+binRoutes.post("/:uuid", async (req, res) => {
   // get the ID from the bin table
   const sql = "SELECT id FROM bin WHERE endpoint=$1";
   const result = await pool.query(sql, [URL]);
   const id = result.rows[0].id;
-  // get the timestamp from the request
-  const timeStamp = req.body.repository.updated_at;
+  // create timestamp
+  const timeStamp = new Date();
   // safely stringify the request
   req = jsonStringifySafe(req);
   // insert the request into the payload table
