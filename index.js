@@ -1,5 +1,5 @@
-const app = require("./app");
 require("dotenv").config();
+const app = require("./app");
 
 const PORT = process.env.BACKEND_PORT;
 app.listen(PORT, () => {
