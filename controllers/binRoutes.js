@@ -31,7 +31,7 @@ binRoutes.get("/hook/:uuid", async (req, res) => {
   const result = await pool.query(sql, [uuid]);
   const id = result.rows[0].id;
   // get the payload data from the payload table with the given uuid
-  const sql2 = "SELECT http_request FROM payload WHERE bin_id=$1";
+  const sql2 = "SELECT http_request, http_timestamp FROM payload WHERE bin_id=$1";
   const payloadRequests = await pool.query(sql2, [String(id)]);
   // sent the payload data to the frontend
   res.send(payloadRequests.rows).end();
@@ -43,7 +43,7 @@ binRoutes.delete("/hook/:uuid", async (req, res) => {
 });
 
 // webhook route
-binRoutes.post("/:uuid", async (req, res) => {
+binRoutes.post("/hook/:uuid", async (req, res) => {
   // extract the uuid from the path
   const uuid = req.params.uuid;
   // get the ID from the bin table
