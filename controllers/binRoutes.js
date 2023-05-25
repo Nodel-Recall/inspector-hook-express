@@ -6,7 +6,7 @@ const pool = require("../pool");
 const { v4: uuidv4 } = require("uuid");
 
 // home route, returns att the uuids currently in the bin table
-binRoutes.get("/", async (req, res) => {
+binRoutes.get("/hook", async (req, res) => {
   const sql = "SELECT * FROM bin";
   const results = await pool.query(sql);
   res.send(results.rows).end();
