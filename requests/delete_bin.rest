@@ -1,0 +1,2 @@
+
+DELETE http://localhost:3001/api/bins/abc123 HTTP/1.1

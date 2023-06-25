@@ -1,8 +1,10 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import bin from "./controllers/bin.js";
+
 const app = express();
-const cors = require("cors");
-const pool = require("./pool.js");
-const binRoutes = require("./controllers/binRoutes.js");
+
+console.log("usernme", process.env.POSTGRES_USER);
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -31,9 +33,8 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(express.static("build"));
 
-// ROUTES
-app.use("/", binRoutes);
+app.use("/api/bins", bin);
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
